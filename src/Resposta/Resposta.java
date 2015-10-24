@@ -15,6 +15,7 @@ public class Resposta implements java.io.Serializable{
 	private String email;
         private int score;
         private int tipo;
+        private int messageStatus;
 
 	public Resposta(int ID, String nome, String email, int score, int tipo){
 		this.ID=ID;
@@ -41,6 +42,10 @@ public class Resposta implements java.io.Serializable{
         public void setTipo(int tipo){
 		this.tipo = tipo;
 	}
+        public void setMessageStatus(int messageStatus)
+        {
+            this.messageStatus = messageStatus;
+        }
 
 	public int getID(){
 		return this.ID;
@@ -58,4 +63,8 @@ public class Resposta implements java.io.Serializable{
         public int getTipo(){
 		return this.tipo;
 	}
+        public int getMessageStatus()
+        {
+            return messageStatus;
+        }
 }

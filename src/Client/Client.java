@@ -5,72 +5,52 @@
  * and open the template in the editor.
  */
 package Client;
+
+import Resposta.Resposta;
+import Requisicao.Requisicao;
 import javax.swing.*;
 import java.io.*;
 import java.net.*;
 
-public class Client{
-	public static void main(String args[]){
-		Socket client;
-		try{
-                    // Criar novo cliente
-			client = new Socket(host, 15000);
-			if(client != null)
-			{
-				//Interacao com a interface 
-                            // Nesse ponto, os dados do cliente devem ser obtidos, usando como base o ID digitado
-                         
-                            /*
-                            A estrutura basica seraa a seguinte:
-                            
-                            if(botao apertado== recuperar){
-                            
-                                Requisicao req = new Requisicao(id, nome, email, score);
-                            
-                            }
-                            if(botao apertado == cadastrar){
-                                Requisicao req = new Requisicao(id, nome, email, score);
-                            }
-                            
-                            */
-                            
-					
-					
-					
-				//Envio de informacoes ao server
-				ObjectOutputStream send = new ObjectOutputStream(client.getOutputStream);
-				send.writeObject(req);
-				
-				//Aguardo de resposta
-				ObjectOutputStream recv = new ObjectOutputStream(client.getInputStream);
-				Resposta rep = (Resposta)recv.readObject();
-				
-				// Tratamento de respostas recebidas 
-                                
-                                
-                                if(rep.getStatus() == Resposta.REGISTRADO){
-					System.out.println("Registrado com sucesso" );
-				}
-                                else if(rep.getStatus() == Resposta.NAO_ENCONTRADO){
-					System.out.println("Cliente nao encontrado" );
-				}
-                                else if(rep.getStatus() == Resposta.EXISTENTE){
-					System.out.println("Cliente ja registrado" );
-				}
-				else
-				{
-					System.out.println("Erro");
-				}
-                                        
-                                
-                                // Fechar a conexao
-				send.close();
-				recv.close();
-				client.close();
-			}
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
-	}
+public class Client {
+
+    Socket client;
+
+    Client(String host, int porta) throws IOException {
+        //Socket client;
+            // Criar novo cliente
+            client = new Socket(host, porta);
+            client.setKeepAlive(true); //deixa o cliente ativo
+    }
+
+    public Resposta sendReceive(Requisicao req) throws IOException, ClassNotFoundException 
+    {
+        ObjectOutputStream send = new ObjectOutputStream(client.getOutputStream());
+        send.writeObject(req);
+
+        //Aguardo de resposta
+        ObjectInputStream recv = new ObjectInputStream(client.getInputStream());
+        Resposta rep = (Resposta) recv.readObject();
+        
+        // Fechar a conexao
+                send.close();
+                recv.close();
+                close();
+        return rep;   
+    }
+
+    public Resposta sendReq(int id) throws IOException, ClassNotFoundException 
+    {
+        return sendReceive(new Requisicao(id));
+    }
+    
+    public Resposta sendCadastro(int ID, String nome, String email, int score, int tipo) throws IOException, ClassNotFoundException
+    {
+        return sendReceive(new Requisicao(ID, nome, email, score, tipo));
+    }
+
+    public void close() throws IOException
+    {
+        client.close();
+    }
 }

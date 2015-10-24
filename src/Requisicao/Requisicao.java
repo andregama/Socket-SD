@@ -24,6 +24,11 @@ public class Requisicao implements java.io.Serializable{
                 this.tipo= tipo;
 
 	}
+        
+        public Requisicao(int ID)
+        {
+            this.ID = ID;
+        }
 	
 	public void setID(int ID){
 		this.ID = ID;
